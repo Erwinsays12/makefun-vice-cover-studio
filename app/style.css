@@ -1,0 +1,264 @@
+/* Vice Cover Studio — editor chrome.
+ * Dark neon UI; the cover itself is drawn on canvas by src/cover.js.
+ * The display face is Anton, shipped under app/fonts/ (SIL OFL).
+ */
+
+@font-face {
+  font-family: 'Anton';
+  src: url('fonts/Anton-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #150826;
+  color: #f5efff;
+  font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  min-height: 100vh;
+}
+
+#appHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 20px 28px 12px;
+  border-bottom: 2px solid #ff3d81;
+  background: linear-gradient(90deg, #2b0a4a 0%, #7b1e6e 55%, #e8446c 100%);
+}
+
+#appTitle {
+  margin: 0;
+  font-family: 'Anton', 'Arial Black', sans-serif;
+  font-size: 44px;
+  letter-spacing: 2px;
+  line-height: 1;
+  color: #ffe259;
+  text-shadow: 3px 3px 0 #14041f, 6px 6px 0 rgba(255, 61, 129, 0.55);
+}
+
+#appTagline { margin: 6px 0 0; color: #ffd9ec; font-size: 14px; }
+
+#appBadge {
+  margin: 0;
+  max-width: 280px;
+  text-align: right;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #ffe9f4;
+  opacity: 0.9;
+}
+
+#editorLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 24px;
+  padding: 24px 28px;
+  align-items: start;
+}
+
+#previewSection { min-width: 0; }
+
+#previewFrame {
+  background: #0d0318;
+  border: 1px solid #5b2a86;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+#previewCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  cursor: grab;
+  touch-action: none;
+}
+
+#previewCanvas:active { cursor: grabbing; }
+
+#selectedPanelLabel { color: #d9c8ff; font-size: 14px; margin: 12px 0 6px; }
+
+#panelControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+#panelControls label { font-size: 14px; color: #d9c8ff; }
+
+#zoomSlider { flex: 1; min-width: 160px; accent-color: #ff3d81; }
+
+#exportNote, #demoNote {
+  min-height: 1.2em;
+  color: #a6ffcb;
+  font-size: 14px;
+}
+
+#controlPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #1e0b33;
+  border: 1px solid #5b2a86;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+#controlPanel section h2 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #ff8a3d;
+}
+
+.choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.choice-button, #resetPanelButton, #fillAllButton, #demoButton {
+  border: 1px solid #7b4bb3;
+  background: #2b1150;
+  color: #f5efff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.choice-button:hover, #resetPanelButton:hover, #fillAllButton:hover, #demoButton:hover {
+  border-color: #ff3d81;
+}
+
+.choice-button.active {
+  background: #ff3d81;
+  border-color: #ff3d81;
+  color: #fff;
+  font-weight: 700;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin: 6px 0;
+  cursor: pointer;
+}
+
+.toggle-row input { accent-color: #ff3d81; width: 16px; height: 16px; }
+
+#captionInput, #subtitleInput {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  border: 1px solid #7b4bb3;
+  border-radius: 8px;
+  background: #150826;
+  color: #fff;
+  font-size: 15px;
+}
+
+#captionInput { font-family: 'Anton', 'Arial Black', sans-serif; letter-spacing: 1px; }
+
+#uploadLabel {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  border: 2px dashed #ff3d81;
+  border-radius: 10px;
+  color: #ffd9ec;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#trayEmpty { color: #b9a3d9; font-size: 13px; }
+
+#photoTray {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tray-photo {
+  border: 1px solid #7b4bb3;
+  background: #2b1150;
+  border-radius: 8px;
+  padding: 4px;
+  cursor: pointer;
+  color: #f5efff;
+}
+
+.tray-photo:hover { border-color: #ffe259; }
+
+.tray-photo img {
+  width: 100%;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.tray-photo span {
+  display: block;
+  font-size: 11px;
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#photoActions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+
+#exportButton {
+  width: 100%;
+  padding: 14px;
+  margin-top: 4px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #ff7e3d, #ff3d81 60%, #c724b1);
+  color: #fff;
+  font-family: 'Anton', 'Arial Black', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+#exportButton:hover { filter: brightness(1.12); }
+
+#exportHint { color: #b9a3d9; font-size: 13px; line-height: 1.5; }
+
+#appFooter {
+  padding: 16px 28px 24px;
+  color: #b9a3d9;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Full-frame shot mode: only the cover fills the window. */
+body.shot-mode { background: #0d0318; }
+body.shot-mode #appHeader,
+body.shot-mode #controlPanel,
+body.shot-mode #selectedPanelLabel,
+body.shot-mode #panelControls,
+body.shot-mode #exportNote,
+body.shot-mode #appFooter { display: none; }
+body.shot-mode #editorLayout { display: block; padding: 0; }
+body.shot-mode #previewSection { margin: 0; }
+body.shot-mode #previewFrame { border: 0; border-radius: 0; padding: 0; background: none; }
+body.shot-mode #previewCanvas { width: 100vw; height: 100vh; border-radius: 0; object-fit: fill; }
+
+@media (max-width: 900px) {
+  #editorLayout { grid-template-columns: 1fr; }
+  #appTitle { font-size: 32px; }
+  #appBadge { display: none; }
+}
